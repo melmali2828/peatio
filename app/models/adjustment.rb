@@ -82,8 +82,8 @@ class Adjustment < ApplicationRecord
 
   # == Instance Methods =====================================================
 
-  def assign_validator(validator:)
-    update!(validator: validator)
+  def assign_validator(opts)
+    update!(validator: opts[:validator])
   end
 
   def fetch_operations

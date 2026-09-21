@@ -170,7 +170,7 @@ describe API::V2::Management::Beneficiaries, type: :request do
 
       context 'name is too long' do
         it do
-          beneficiary_data.merge!(name: Faker::Lorem.sentence(500))
+          beneficiary_data.merge!(name: Faker::Lorem.sentence(word_count: 500))
           request
           expect(response.status).to eq 422
           expect(response.body).to match(/management.beneficiary.too_long_name/i)
@@ -188,7 +188,7 @@ describe API::V2::Management::Beneficiaries, type: :request do
 
       context 'description is too long' do
         it do
-          beneficiary_data.merge!(description: Faker::Lorem.sentence(500))
+          beneficiary_data.merge!(description: Faker::Lorem.sentence(word_count: 500))
           request
           expect(response.status).to eq 422
           expect(response.body).to match(/management.beneficiary.too_long_description/i)

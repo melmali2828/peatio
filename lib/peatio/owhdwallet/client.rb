@@ -31,7 +31,7 @@ module OWHDWallet
       args.last['Accept'] = 'application/json'
 
       response = connection.send(verb, *args)
-      response.assert_success!
+      response.assert_2xx!
       response = JSON.parse(response.body)
     rescue Faraday::Error => e
       raise ConnectionError, e

@@ -77,7 +77,9 @@ module API
           exactly_one_of :currencies, :currency, message: 'management.wallet.currencies_field_is_missing'
         end
         post '/wallets/new' do
-          wallet = ::Wallet.new(declared(params))
+          declared_params = declared(params)
+          declared_params[:currency_ids] = params[:currencies].present? ? Array.wrap(params[:currencies]) : Array.wrap(params[:currency])
+          wallet = ::Wallet.new(declared_params)
           if wallet.save
             present wallet, with: API::V2::Admin::Entities::Wallet
             status 201

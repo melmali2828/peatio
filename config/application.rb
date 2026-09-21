@@ -26,8 +26,9 @@ module Peatio
 
     # Configure Sentry as early as possible.
     if ENV['SENTRY_DSN_BACKEND'].present?
-      require 'sentry-raven'
-      Raven.configure { |config| config.dsn = ENV['SENTRY_DSN_BACKEND'] }
+      require 'sentry-ruby'
+      require 'sentry-rails'
+      Sentry.init { |config| config.dsn = ENV['SENTRY_DSN_BACKEND'] }
     end
 
     # Require Scout.
@@ -40,6 +41,16 @@ module Peatio
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = ENV.fetch('TIMEZONE')
+
+    # Rails 6.1 restricts YAML-serialized ActiveRecord columns (e.g. `serialize
+    # :spread, Array`) to a safe class allowlist by default. Some serialized
+    # data contains ActiveSupport::StringInquirer (from Rails.env), which
+    # isn't in the default allowlist and raises Psych::DisallowedClass on
+    # load. Extend the allowlist rather than disabling safe loading entirely.
+    config.active_record.yaml_column_permitted_classes = [
+      Symbol, Date, Time, BigDecimal,
+      ActiveSupport::HashWithIndifferentAccess, ActiveSupport::StringInquirer
+    ]
 
     # Configure relative url root by setting URL_ROOT_PATH environment variable.
     # Used by microkube with API Gateway.

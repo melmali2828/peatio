@@ -94,7 +94,7 @@ module API
 
           sql = "SELECT * FROM " + deposit_sql + "UNION " + withdraw_sql + ") AS transactions ORDER BY updated_at #{params[:order_by].upcase}"
 
-          result = ActiveRecord::Base.connection.exec_query(sql).to_hash
+          result = ActiveRecord::Base.connection.exec_query(sql).to_a
 
           result.select! { |t|  t['currency_id'] == params[:currency].downcase } if params[:currency].present?
           result.select! { |t|  t['txid'] == params[:txid] } if params[:txid].present?

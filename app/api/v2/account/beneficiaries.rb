@@ -35,7 +35,7 @@ module API
               .beneficiaries
               .available_to_member
               .tap do |q|
-                q.where!(currency_id: params[:currency_id]) if params[:currency_id].present?
+                q.where!(currency_id: declared(params)[:currency_id]) if declared(params)[:currency_id].present?
               end
               .tap do |q|
                 q.where!(state: params[:state]) if params[:state].present?
@@ -91,7 +91,7 @@ module API
 
             declared_params = declared(params)
 
-            currency = Currency.find_by!(id: params[:currency_id])
+            currency = Currency.find_by!(id: declared(params)[:currency_id])
 
             if !currency.withdrawal_enabled?
               error!({ errors: ['account.currency.withdrawal_disabled'] }, 422)

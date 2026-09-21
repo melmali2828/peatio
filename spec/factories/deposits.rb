@@ -9,7 +9,7 @@ FactoryBot.define do
     factory :deposit_btc, class: Deposits::Coin do
       currency { Currency.find(:btc) }
       address { create(:payment_address, :btc_address).address }
-      txid { Faker::Lorem.characters(64) }
+      txid { Faker::Lorem.characters(number: 64) }
       txout { 0 }
       block_number { rand(1..1349999) }
     end
@@ -22,7 +22,7 @@ FactoryBot.define do
       type { Deposits::Coin }
       currency { Currency.find(:btc) }
       address { create(:payment_address, :btc_address).address  }
-      txid { Faker::Lorem.characters(64) }
+      txid { Faker::Lorem.characters(number: 64) }
       txout { 0 }
     end
 
@@ -31,7 +31,7 @@ FactoryBot.define do
       currency { Currency.find(:eth) }
       member { create(:member, :level_3, :barong) }
       address { create(:payment_address, :eth_address).address  }
-      txid { Faker::Lorem.characters(64) }
+      txid { Faker::Lorem.characters(number: 64) }
       txout { 0 }
     end
 
@@ -40,7 +40,7 @@ FactoryBot.define do
       currency { Currency.find(:trst) }
       member { create(:member, :level_3, :barong) }
       address { create(:payment_address, :trst_address).address  }
-      txid { Faker::Lorem.characters(64) }
+      txid { Faker::Lorem.characters(number: 64) }
       txout { 0 }
     end
 
@@ -49,7 +49,7 @@ FactoryBot.define do
       currency { Currency.find(:ring) }
       member { create(:member, :level_3, :barong) }
       address { create(:payment_address, :trst_address).address  }
-      txid { Faker::Lorem.characters(64) }
+      txid { Faker::Lorem.characters(number: 64) }
       txout { 0 }
     end
   end

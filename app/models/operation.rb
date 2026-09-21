@@ -72,8 +72,8 @@ class Operation < ApplicationRecord
       params = opt.merge(amount: amount, currency: currency)
 
       [
-        debit!(params.merge(kind: from_kind)),
-        credit!(params.merge(kind: to_kind))
+        debit!(**params.merge(kind: from_kind)),
+        credit!(**params.merge(kind: to_kind))
       ]
     end
 

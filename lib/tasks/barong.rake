@@ -16,7 +16,7 @@ namespace :barong do
       .each do |auth|
         next if auth.token.blank? || auth.member.blank?
 
-        profile       = JSON.parse(Faraday.get(url, nil, 'Authorization' => "Bearer #{auth.token}").assert_success!.body)
+        profile       = JSON.parse(Faraday.get(url, nil, 'Authorization' => "Bearer #{auth.token}").assert_2xx!.body)
         current_level = auth.member.level
         new_level     = profile.fetch('level')
 

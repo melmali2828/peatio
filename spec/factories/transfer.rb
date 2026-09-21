@@ -3,7 +3,7 @@
 
 FactoryBot.define do
   sequence :transfer_key do
-    "transfer_#{Faker::Number.unique.number(5).to_i}"
+    "transfer_#{Faker::Number.unique.number(digits: 5).to_i}"
   end
 
   factory :transfer do
@@ -13,28 +13,28 @@ FactoryBot.define do
 
     trait :with_assets do
       after(:create) do |t|
-        assets_number = Faker::Number.between(1, 5).to_i
+        assets_number = Faker::Number.between(from: 1, to: 5).to_i
         create_list(:asset, assets_number, reference: t)
       end
     end
 
     trait :with_expenses do
       after(:create) do |t|
-        expense_number = Faker::Number.between(1, 5).to_i
+        expense_number = Faker::Number.between(from: 1, to: 5).to_i
         create_list(:expense, expense_number, reference: t)
       end
     end
 
     trait :with_liabilities do
       after(:create) do |t|
-        liabilities_number = Faker::Number.between(1, 5).to_i
+        liabilities_number = Faker::Number.between(from: 1, to: 5).to_i
         create_list(:liability, liabilities_number, :with_member, reference: t)
       end
     end
 
     trait :with_revenues do
       after(:create) do |t|
-        revenues_number = Faker::Number.between(1, 5).to_i
+        revenues_number = Faker::Number.between(from: 1, to: 5).to_i
         create_list(:revenue, revenues_number, reference: t)
       end
     end

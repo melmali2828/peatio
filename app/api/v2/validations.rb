@@ -7,7 +7,7 @@ module API
       # TODO: Update params validation by overriding message method.
       # New message structure is "#{PREFIX}.#{REASON}#{ATTRIBUTE}" e.g "account.withdraw.invalid_amount"
 
-      class Range < Grape::Validations::Base
+      class Range < Grape::Validations::Validators::Base
         def initialize(*)
           super
           @range = @option
@@ -23,7 +23,7 @@ module API
       end
 
       # overrides default Grape PresenceValidator class methods
-      class PresenceValidator < Grape::Validations::PresenceValidator
+      class PresenceValidator < Grape::Validations::Validators::PresenceValidator
         # Default exception is costructed from `@api` class name.
         # E.g
         # @api.class  => API::V2::Account::Withdraws
@@ -31,7 +31,7 @@ module API
 
         def message(_param)
           api = @scope.instance_variable_get(:@api)
-          module_name = api.base.parent.name.humanize.demodulize
+          module_name = api.base.module_parent.name.humanize.demodulize
           class_name = api.base.name.humanize.demodulize.singularize
           # Return default API error message for Management module (no errors unify).
           return super if module_name == 'management'
@@ -45,7 +45,7 @@ module API
       end
 
       # overrides default Grape AllowBlankValidator class methods
-      class AllowBlankValidator < Grape::Validations::AllowBlankValidator
+      class AllowBlankValidator < Grape::Validations::Validators::AllowBlankValidator
         # Default exception is costructed from `@api` class name.
         # E.g
         # @api.class  => API::V2::Account::Withdraws
@@ -53,7 +53,7 @@ module API
 
         def message(_param)
           api = @scope.instance_variable_get(:@api)
-          module_name = api.base.parent.name.humanize.demodulize
+          module_name = api.base.module_parent.name.humanize.demodulize
           class_name = api.base.name.humanize.demodulize.singularize
           # Return default API error message for Management module (no errors unify).
           return super if module_name == 'management'
@@ -66,7 +66,7 @@ module API
         end
       end
 
-      class IntegerGTZero < Grape::Validations::Base
+      class IntegerGTZero < Grape::Validations::Validators::Base
         def validate_param!(name, params)
           return unless params.key?(name)
           return if params[name].to_s.to_i > 0
@@ -77,7 +77,7 @@ module API
         end
       end
 
-      class ValidateCurrencyAddressFormat < Grape::Validations::Base
+      class ValidateCurrencyAddressFormat < Grape::Validations::Validators::Base
 
         REASON ||= 'doesnt_support_cash_address_format'
         def validate_param!(name, params)

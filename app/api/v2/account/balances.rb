@@ -33,7 +33,7 @@ module API
         get '/balances' do
           user_authorize! :read, ::Operations::Account
 
-          search_params = params[:search]
+          search_params = declared(params)[:search]
                                 .slice(:code, :name)
                                 .transform_keys {|k| "#{k}_cont"}
                                 .merge(m: 'or')

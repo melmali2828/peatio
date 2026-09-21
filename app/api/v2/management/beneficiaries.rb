@@ -33,8 +33,8 @@ module API
             member
               .beneficiaries
               .available_to_member
-              .tap { |q| q.where!(currency_id: params[:currency_id]) if params[:currency_id].present? }
-              .tap {|q| q.where!(state: params[:state]) if params[:state].present? }
+              .tap { |q| q.where!(currency_id: declared(params)[:currency_id]) if declared(params)[:currency_id].present? }
+              .tap {|q| q.where!(state: declared(params)[:state]) if declared(params)[:state].present? }
               .yield_self { |b| present paginate(b), with: API::V2::Management::Entities::Beneficiary }
 
             status 200
@@ -75,7 +75,7 @@ module API
           post do
             declared_params = declared(params)
             member   = Member.find_by!(uid: params[:uid])
-            currency = Currency.find_by!(id: params[:currency_id])
+            currency = Currency.find_by!(id: declared(params)[:currency_id])
 
             if !currency.withdrawal_enabled?
               error!({ errors: ['management.currency.withdrawal_disabled'] }, 422)

@@ -137,7 +137,9 @@ module API
         post '/wallets/new' do
           admin_authorize! :create, ::Wallet
 
-          wallet = ::Wallet.new(params)
+          declared_params = declared(params)
+          declared_params[:currency_ids] = params[:currencies].present? ? Array.wrap(params[:currencies]) : Array.wrap(params[:currency])
+          wallet = ::Wallet.new(declared_params)
           if wallet.save
             present wallet, with: API::V2::Admin::Entities::Wallet
             status 201

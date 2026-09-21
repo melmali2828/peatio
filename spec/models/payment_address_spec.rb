@@ -29,13 +29,13 @@ describe PaymentAddress do
 
     it 'long secret' do
       expect {
-        addr.update(secret: Faker::String.random(1024))
+        addr.update(secret: Faker::String.random(length: 1024))
       }.to raise_error ActiveRecord::ValueTooLong
     end
 
     it 'long details' do
       expect {
-        addr.update(details: { test: Faker::String.random(1024) })
+        addr.update(details: { test: Faker::String.random(length: 1024) })
       }.to raise_error ActiveRecord::ValueTooLong
     end
   end

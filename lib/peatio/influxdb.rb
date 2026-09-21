@@ -6,7 +6,7 @@ module Peatio
     class << self
       def client(opts={})
         # Map InfluxDB clients with received opts.
-        clients[opts] ||= ::InfluxDB::Client.new(parse(config.merge(opts)))
+        clients[opts] ||= ::InfluxDB::Client.new(**parse(config.merge(opts)))
       end
 
       def config

@@ -35,7 +35,7 @@ module Bench
 
       def construct_member
         { email: unique_email,
-          uid: "U#{Faker::Number.number(9)}",
+          uid: "U#{Faker::Number.number(digits: 9)}",
           level: 3,
           role:  'member',
           state: 'active' }.merge(@options)
@@ -76,7 +76,7 @@ module Bench
       def construct_coin_deposit
         { amount:  DEFAULT_DEPOSIT_AMOUNT,
           address: Faker::Blockchain::Bitcoin.address,
-          txid:    Faker::Lorem.characters(64),
+          txid:    Faker::Lorem.characters(number: 64),
           txout:   0,
           type:    'Deposits::Coin' }.merge(@options)
       end

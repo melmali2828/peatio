@@ -14,7 +14,7 @@ FactoryBot.define do
 
     reference_type { %w[order deposit trade].sample }
 
-    created_at { Faker::Date.between(3.days.ago, Date.today) }
+    created_at { Faker::Date.between(from: 3.days.ago, to: Date.today) }
   end
 
   factory :asset, class: Operations::Asset, parent: :operation do

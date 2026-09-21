@@ -15,9 +15,9 @@ module API
         end
 
         def set_ets_context!
-          Raven.tags_context(
+          Sentry.set_tags(
             peatio_version: Peatio::Application::VERSION
-          ) if defined?(Raven)
+          ) if defined?(Sentry)
         end
 
         private
@@ -38,7 +38,7 @@ module API
           end
 
           if attrs[:credit].present?
-            klass.credit!({
+            klass.credit!(**{
               amount: attrs.fetch(:credit),
               currency: currency,
               code: attrs.fetch(:code),
@@ -46,7 +46,7 @@ module API
               reference: attrs[:reference]
             }.compact)
           elsif attrs[:debit].present?
-            klass.debit!({
+            klass.debit!(**{
               amount: attrs.fetch(:debit),
               currency: currency,
               code: attrs.fetch(:code),

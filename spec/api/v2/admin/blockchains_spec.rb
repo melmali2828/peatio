@@ -208,13 +208,13 @@ describe API::V2::Admin::Blockchains, type: :request do
     end
 
     it 'long blockchain key' do
-      api_post '/api/v2/admin/blockchains/new', token: token, params: { key: Faker::String.random(1024), name: 'Test', client: 'geth',server: 'http://127.0.0.1', height: 123333, explorer_transaction: 'test', explorer_address: 'test'}
+      api_post '/api/v2/admin/blockchains/new', token: token, params: { key: Faker::String.random(length: 1024), name: 'Test', client: 'geth',server: 'http://127.0.0.1', height: 123333, explorer_transaction: 'test', explorer_address: 'test'}
       expect(response).not_to be_successful
       expect(response).to include_api_error('admin.blockchain.key_too_long')
     end
 
     it 'long blockchain name' do
-      api_post '/api/v2/admin/blockchains/new', token: token, params: { key: Faker::String.random(24), name: Faker::String.random(1024), client: 'geth',server: 'http://127.0.0.1', height: 123333, explorer_transaction: 'test', explorer_address: 'test'}
+      api_post '/api/v2/admin/blockchains/new', token: token, params: { key: Faker::String.random(length: 24), name: Faker::String.random(length: 1024), client: 'geth',server: 'http://127.0.0.1', height: 123333, explorer_transaction: 'test', explorer_address: 'test'}
       expect(response).not_to be_successful
       expect(response).to include_api_error('admin.blockchain.name_too_long')
     end
@@ -310,13 +310,13 @@ describe API::V2::Admin::Blockchains, type: :request do
     end
 
     it 'long blockchain key' do
-      api_post '/api/v2/admin/blockchains/update', token: token, params: { key: Faker::String.random(1024) }
+      api_post '/api/v2/admin/blockchains/update', token: token, params: { key: Faker::String.random(length: 1024) }
       expect(response).not_to be_successful
       expect(response).to include_api_error('admin.blockchain.key_too_long')
     end
 
     it 'long blockchain name' do
-      api_post '/api/v2/admin/blockchains/update', token: token, params: { name: Faker::String.random(1024) }
+      api_post '/api/v2/admin/blockchains/update', token: token, params: { name: Faker::String.random(length: 1024) }
       expect(response).not_to be_successful
       expect(response).to include_api_error('admin.blockchain.name_too_long')
     end

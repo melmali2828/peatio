@@ -255,7 +255,7 @@ describe API::V2::Account::Beneficiaries, 'POST', type: :request do
       end
 
       it 'renders unauthorized error' do
-        api_post endpoint, params: beneficiary_data.merge(description: Faker::String.random(120)), token: token
+        api_post endpoint, params: beneficiary_data.merge(description: Faker::String.random(length: 120)), token: token
         expect(response).to have_http_status 403
         expect(response).to include_api_error('user.ability.not_permitted')
       end
@@ -283,7 +283,7 @@ describe API::V2::Account::Beneficiaries, 'POST', type: :request do
 
     context 'name is too long' do
       it do
-        api_post endpoint, params: beneficiary_data.merge(name: Faker::String.random(65)), token: token
+        api_post endpoint, params: beneficiary_data.merge(name: Faker::String.random(length: 65)), token: token
         expect(response.status).to eq 422
         expect(response).to include_api_error('account.beneficiary.too_long_name')
       end
@@ -291,7 +291,7 @@ describe API::V2::Account::Beneficiaries, 'POST', type: :request do
 
     context 'description is too long' do
       it do
-        api_post endpoint, params: beneficiary_data.merge(description: Faker::String.random(256)), token: token
+        api_post endpoint, params: beneficiary_data.merge(description: Faker::String.random(length: 256)), token: token
         expect(response.status).to eq 422
         expect(response).to include_api_error('account.beneficiary.too_long_description')
       end

@@ -107,12 +107,12 @@ describe Currency do
     let!(:fake_currency) { create(:currency, :btc, id: 'fake') }
 
     it 'should not update the base factor' do
-      fake_currency.update_attributes :base_factor => 8
+      fake_currency.update :base_factor => 8
       expect(fake_currency.reload.base_factor).to eq(fake_currency.base_factor)
     end
 
     it 'should not update the type' do
-      fake_currency.update_attributes :type => 'fiat'
+      fake_currency.update :type => 'fiat'
       expect(fake_currency.reload.type).to eq(fake_currency.type)
     end
   end
@@ -163,7 +163,7 @@ describe Currency do
       let!(:token) { Currency.find(:trst) }
 
       it 'should update blockchain key' do
-        token.update_attributes :blockchain_key => coin.blockchain_key
+        token.update :blockchain_key => coin.blockchain_key
         expect(token.reload.blockchain_key).to eq(coin.blockchain_key)
       end
 

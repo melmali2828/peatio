@@ -25,7 +25,7 @@ module Ethereum
           {jsonrpc: '2.0', id: rpc_call_id, method: method, params: params}.to_json,
           {'Accept' => 'application/json',
            'Content-Type' => 'application/json'}
-      response.assert_success!
+      response.assert_2xx!
       response = JSON.parse(response.body)
       response['error'].tap { |error| raise ResponseError.new(error['code'], error['message']) if error }
       response.fetch('result')

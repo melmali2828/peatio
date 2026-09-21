@@ -146,7 +146,7 @@ module API
                    values: { value: -> { Currency.codes }, message: 'admin.deposit.currency_doesnt_exist' },
                    as: :currency_id,
                    desc: -> { API::V2::Admin::Entities::Deposit.documentation[:currency][:desc] }
-          given :currency_id do
+          given :currency do
             optional :address_format,
                     type: String,
                     values: { value: -> { %w[legacy cash] }, message: 'admin.deposit.invalid_address_format' },
@@ -158,7 +158,7 @@ module API
           admin_authorize! :create, ::PaymentAddress
 
           member   = Member.find_by!(uid: params[:uid])
-          currency = Currency.find_by!(id: params[:currency_id])
+          currency = Currency.find_by!(id: declared(params)[:currency_id])
           wallet   = Wallet.active_deposit_wallet(currency.id)
 
           unless wallet.present?

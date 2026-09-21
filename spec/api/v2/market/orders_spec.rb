@@ -263,7 +263,7 @@ describe API::V2::Market::Orders, type: :request do
 
   describe 'POST /api/v2/market/orders' do
     it 'creates a sell order on peatio engine' do
-      member.get_account(:btc).update_attributes(balance: 100)
+      member.get_account(:btc).update(balance: 100)
 
       expect do
         api_post '/api/v2/market/orders', token: token, params: { market: 'btcusd', side: 'sell', volume: '12.13', price: '2014' }
@@ -273,7 +273,7 @@ describe API::V2::Market::Orders, type: :request do
     end
 
     it 'submit a sell order on third party engine' do
-      member.get_account(:btc).update_attributes(balance: 100)
+      member.get_account(:btc).update(balance: 100)
       Market.find('btcusd').engine.update(driver: "finex-spot")
       AMQP::Queue.expects(:publish)
 
@@ -285,7 +285,7 @@ describe API::V2::Market::Orders, type: :request do
     end
 
     it 'creates a buy order' do
-      member.get_account(:usd).update_attributes(balance: 100_000)
+      member.get_account(:usd).update(balance: 100_000)
       AMQP::Queue.expects(:enqueue).with(:order_processor, is_a(Hash), is_a(Hash))
 
       expect do
@@ -308,7 +308,7 @@ describe API::V2::Market::Orders, type: :request do
     end
 
     it 'validates missing params' do
-      member.get_account(:usd).update_attributes(balance: 100_000)
+      member.get_account(:usd).update(balance: 100_000)
       api_post '/api/v2/market/orders', token: token
       expect(response).to have_http_status(422)
       expect(response).to include_api_error('market.order.missing_market')
@@ -332,7 +332,7 @@ describe API::V2::Market::Orders, type: :request do
     end
 
     it 'validates volume greater than min_amount' do
-      member.get_account(:btc).update_attributes(balance: 1)
+      member.get_account(:btc).update(balance: 1)
       m = Market.find(:btcusd)
       m.update(min_amount: 1.0)
       api_post '/api/v2/market/orders', token: token, params: { market: 'btcusd', side: 'sell', volume: '0.1', price: '2014' }
@@ -341,7 +341,7 @@ describe API::V2::Market::Orders, type: :request do
     end
 
     it 'validates price less than max_price' do
-      member.get_account(:usd).update_attributes(balance: 1)
+      member.get_account(:usd).update(balance: 1)
       m = Market.find(:btcusd)
       m.update(max_price: 1.0)
       api_post '/api/v2/market/orders', token: token, params: { market: 'btcusd', side: 'buy', volume: '0.1', price: '2' }
@@ -350,14 +350,14 @@ describe API::V2::Market::Orders, type: :request do
     end
 
     it 'validates volume precision' do
-      member.get_account(:usd).update_attributes(balance: 1)
+      member.get_account(:usd).update(balance: 1)
       api_post '/api/v2/market/orders', token: token, params: { market: 'btcusd', side: 'buy', volume: '0.123456789', price: '0.1' }
       expect(response.code).to eq '422'
       expect(response).to include_api_error('market.order.invalid_volume_or_price')
     end
 
     it 'validates price greater than min_price' do
-      member.get_account(:usd).update_attributes(balance: 1)
+      member.get_account(:usd).update(balance: 1)
       m = Market.find(:btcusd)
       m.update(min_price: 1.0)
       api_post '/api/v2/market/orders', token: token, params: { market: 'btcusd', side: 'buy', volume: '0.1', price: '0.2' }
@@ -366,7 +366,7 @@ describe API::V2::Market::Orders, type: :request do
     end
 
     it 'validates price precision' do
-      member.get_account(:usd).update_attributes(balance: 1)
+      member.get_account(:usd).update(balance: 1)
       api_post '/api/v2/market/orders', token: token, params: { market: 'btcusd', side: 'buy', volume: '0.12', price: '0.123' }
       expect(response.code).to eq '422'
       expect(response).to include_api_error('market.order.invalid_volume_or_price')
@@ -394,7 +394,7 @@ describe API::V2::Market::Orders, type: :request do
 
     context 'market order' do
       it 'validates that market has sufficient volume' do
-        member.get_account(:btc).update_attributes(balance: 20)
+        member.get_account(:btc).update(balance: 20)
         api_post '/api/v2/market/orders', token: token, params: { market: 'btcusd', side: 'sell', volume: '12.13', ord_type: 'market' }
         expect(response.code).to eq '422'
         expect(response).to include_api_error('market.order.insufficient_market_liquidity')
@@ -409,7 +409,7 @@ describe API::V2::Market::Orders, type: :request do
       it 'creates sell order' do
         create(:order_bid, :btcusd, price: '10'.to_d, volume: '10', origin_volume: '10', member: member)
 
-        member.get_account(:btc).update_attributes(balance: 1)
+        member.get_account(:btc).update(balance: 1)
 
         expect do
           api_post '/api/v2/market/orders', token: token, params: { market: 'btcusd', side: 'sell', volume: '0.5', ord_type: 'market' }
@@ -423,7 +423,7 @@ describe API::V2::Market::Orders, type: :request do
         it do
           create(:order_bid, :btcusd, price: '10'.to_d, volume: '10', origin_volume: '10', member: member)
 
-          member.get_account(:btc).update_attributes(balance: 1)
+          member.get_account(:btc).update(balance: 1)
 
           Market.find('btcusd').engine.update(driver: "finex-spot")
 
@@ -440,7 +440,7 @@ describe API::V2::Market::Orders, type: :request do
       it 'creates buy order' do
         create(:order_ask, :btcusd, price: '10'.to_d, volume: '10', origin_volume: '10', member: member)
 
-        member.get_account(:usd).update_attributes(balance: 10)
+        member.get_account(:usd).update(balance: 10)
 
         api_post '/api/v2/market/orders', token: token, params: { market: 'btcusd', side: 'buy', volume: '0.5', ord_type: 'market' }
 
@@ -455,7 +455,7 @@ describe API::V2::Market::Orders, type: :request do
       context '#compute_locked' do
         before do
           create(:order_ask, :btcusd, price: '10'.to_d, volume: '10', origin_volume: '10', member: member)
-          member.get_account(:usd).update_attributes(balance: 10)
+          member.get_account(:usd).update(balance: 10)
         end
 
         it 'locks all balance' do
@@ -479,7 +479,7 @@ describe API::V2::Market::Orders, type: :request do
 
     context 'succesful' do
       before do
-        member.get_account(:usd).update_attributes(locked: order.price * order.volume)
+        member.get_account(:usd).update(locked: order.price * order.volume)
       end
 
       it 'should cancel specified order by id' do
@@ -547,8 +547,8 @@ describe API::V2::Market::Orders, type: :request do
       create(:order_bid, :btcusd, price: '12.32', volume: '3.14', origin_volume: '12.13', member: member)
       create(:order_bid, :btceth, price: '12.32', volume: '3.14', origin_volume: '12.13', member: member)
 
-      member.get_account(:btc).update_attributes(locked: '5')
-      member.get_account(:usd).update_attributes(locked: '50')
+      member.get_account(:btc).update(locked: '5')
+      member.get_account(:usd).update(locked: '50')
     end
 
     it 'should cancel all my orders' do

@@ -70,7 +70,7 @@ module Bench
       def save_report
         report_path = Rails.root.join(@config[:report_path])
         FileUtils.mkpath(report_path)
-        report_name = "#{self.class.parent.name.demodulize.downcase}-"\
+        report_name = "#{self.class.module_parent.name.demodulize.downcase}-"\
                       "#{self.class.name.humanize.demodulize}-#{@config[:orders][:injector]}-"\
                       "#{@config[:orders][:number]}-#{@processing_started_at.iso8601}.yml"
         File.open(report_path.join(report_name), 'w') do |f|

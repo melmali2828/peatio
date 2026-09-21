@@ -63,7 +63,7 @@ describe Wallet do
 
     it 'long encrypted secret' do
       expect {
-        subject.secret = Faker::String.random(1024)
+        subject.secret = Faker::String.random(length: 1024)
         subject.save!
       }.to raise_error ActiveRecord::ValueTooLong
     end
