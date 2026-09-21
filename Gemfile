@@ -3,7 +3,7 @@
 
 source 'https://rubygems.org'
 
-ruby '~> 3.0.0'
+ruby '~> 3.1.0'
 
 gem 'ransack', '~> 2.4.2'
 gem 'rails', '~> 6.1.0'
