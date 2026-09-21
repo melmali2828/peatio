@@ -330,7 +330,7 @@ describe API::V2::Management::Transfers, type: :request do
       end
 
       it 'updates legacy balances' do
-        expect { request }.to change{ referrer1.get_account(base_unit).balance }.by(0.0001 + 0.0003).and \
+        expect { request }.to change{ referrer1.get_account(base_unit).balance }.by(BigDecimal("0.0001") + BigDecimal("0.0003")).and \
                               change{ referrer2.get_account(base_unit).balance }.by(0.00015).and \
                               change{ referrer2.get_account(quote_unit).balance }.by(0.05).and \
                               change{ referrer3.get_account(quote_unit).balance }.by(0.075)

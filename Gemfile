@@ -3,7 +3,7 @@
 
 source 'https://rubygems.org'
 
-ruby '~> 2.6'
+ruby '~> 2.7'
 
 gem 'ransack', '~> 2.3.2'
 gem 'rails', '~> 5.2.4.5'
@@ -74,11 +74,11 @@ group :development do
 end
 
 group :test do
-  gem 'rspec-rails', '~> 3.8', '>= 3.8.2'
+  gem 'rspec-rails', '3.9.0'
   gem 'rspec-retry',         '~> 0.6'
-  gem 'webmock',             '~> 3.5'
+  gem 'webmock', '3.18.1'
   gem 'database_cleaner',    '~> 1.7'
-  gem 'mocha',               '~> 1.8', require: false
+  gem 'mocha', '1.16.1', require: false
   gem 'factory_bot_rails', '~> 5.0', '>= 5.0.2'
   gem 'timecop',             '~> 0.9'
   gem 'rubocop-rspec',       '~> 1.32', require: false
@@ -90,3 +90,13 @@ Dir.glob File.expand_path('../Gemfile.plugin', __FILE__) do |file|
 end
 
 gem "pg", "~> 1.2"
+gem 'psych', '~> 3.3.2'
+
+# Pin the whole rspec/mocha family to their originally-locked versions.
+# Newer patch releases in this family broke the mocha `.stubs` integration
+# used throughout spec_helper.rb ("outside of the per-test lifecycle" error).
+gem 'rspec-core', '3.9.0'
+gem 'rspec-expectations', '3.9.0'
+gem 'rspec-mocks', '3.9.0'
+gem 'rspec-support', '3.9.4'
+

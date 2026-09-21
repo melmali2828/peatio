@@ -1,6 +1,7 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
+require 'mocha/api'
 require 'base64'
 require 'openssl'
 
@@ -34,6 +35,12 @@ ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 Rails.application.load_tasks
 
 RSpec.configure do |config|
+  config.before(:suite) do
+    if Class.instance_method(:any_instance).owner == Class
+      Class.send(:remove_method, :any_instance)
+    end
+  end
+
   # ## Mock Framework
   #
   # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:
