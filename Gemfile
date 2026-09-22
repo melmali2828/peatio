@@ -3,7 +3,7 @@
 
 source 'https://rubygems.org'
 
-ruby '~> 3.2.0'
+ruby '~> 3.4.0'
 
 gem 'ransack', '~> 2.4.2'
 gem 'rails', '~> 6.1.0'
@@ -44,7 +44,7 @@ gem 'method-not-implemented', '~> 1.0.1'
 gem 'validates_lengths_from_database', '~> 0.7.0'
 gem 'jwt-multisig', '~> 1.0.0'
 gem 'cash-addr', '~> 0.2.0', require: 'cash_addr'
-gem 'digest-sha3-patched-ruby-3', '~> 1.1.1', require: 'digest/sha3'
+gem 'keccak', '~> 1.3', require: 'digest/keccak'
 gem 'scout_apm', '~> 2.4', require: false
 gem 'peatio', '~> 3.1.0'
 gem 'rack-cors', '~> 1.0.6', require: false
@@ -100,3 +100,7 @@ gem 'rspec-expectations', '3.9.0'
 gem 'rspec-mocks', '3.9.0'
 gem 'rspec-support', '3.9.4'
 
+gem 'mutex_m'
+gem 'observer'
+gem 'csv'
+gem 'drb'
