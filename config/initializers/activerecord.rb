@@ -12,7 +12,7 @@ module ActiveRecord
 end
 
 database_config = ActiveRecord::Base.configurations
-  .configs_for(env_name: Rails.env, spec_name: 'primary')
+  .configs_for(env_name: Rails.env, name: 'primary')
   .configuration_hash
 
 Rails.configuration.database_support_json = database_config[:support_json]

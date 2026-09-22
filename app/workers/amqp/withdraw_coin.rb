@@ -19,18 +19,20 @@ module Workers
           return
         end
 
+        # Leave this block with `next`, never `return`: Rails handles a return out of a
+        # transaction differently per version (6.1 and 7.2+ commit, 7.0 rolls back).
         withdraw.with_lock do
           unless withdraw.processing?
             @logger.warn id: withdraw.id,
                          message: 'The withdraw is being processed by another worker or has already been processed.'
-            return
+            next
           end
 
           if withdraw.rid.blank?
             @logger.warn id: withdraw.id,
                          message: 'The destination address doesn\'t exist.'
             withdraw.fail!
-            return
+            next
           end
 
           @logger.warn id: withdraw.id,
@@ -48,7 +50,7 @@ module Workers
                          currency: withdraw.currency.code.upcase,
                          message: 'Can\'t find active hot wallet for currency.'
             withdraw.skip!
-            return
+            next
           end
 
           balance = wallet.current_balance(withdraw.currency)
@@ -57,7 +59,7 @@ module Workers
                          balance: balance.to_s,
                          amount: withdraw.amount.to_s,
                          message: 'The withdraw skipped because wallet balance is not sufficient or amount greater than wallet max_balance.'
-            return withdraw.skip!
+            next withdraw.skip!
           end
 
           @logger.warn id: withdraw.id,
@@ -86,7 +88,7 @@ module Workers
                          currency: withdraw.currency.code.upcase,
                          amount: withdraw.amount.to_s,
                          message: 'The withdraw is under review, waiting for admin to approve transaction.'
-            return
+            next
           end
 
           @logger.warn id: withdraw.id, message: 'Withdrawal has processed'
