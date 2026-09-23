@@ -1,8 +1,11 @@
 source 'https://rubygems.org'
 # List your plugins here.
+# Disabled (2026-09): these openware plugins are unmaintained since 2023 and
+# pin activesupport ~> 6.1, which blocks Rails 7. BTC/ETH clients live in
+# lib/peatio. To bring a chain back, move its plugin source into lib/peatio.
 
-gem 'peatio-litecoin', '~> 3.1.0'
-gem 'peatio-bitcoincash', '~> 3.1.0'
-gem 'peatio-ripple', '~> 3.1.0'
-gem 'peatio-bitgo', '~> 3.1.0'
-gem 'peatio-electrum', '~> 3.1.0'
+# gem 'peatio-litecoin', '~> 3.1.0'
+# gem 'peatio-bitcoincash', '~> 3.1.0'
+# gem 'peatio-ripple', '~> 3.1.0'
+# gem 'peatio-bitgo', '~> 3.1.0'
+# gem 'peatio-electrum', '~> 3.1.0'
