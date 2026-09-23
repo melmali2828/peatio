@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-require_dependency 'v2/entities/order'
+require_dependency 'api/v2/entities/order'
 
 module API
   module V2

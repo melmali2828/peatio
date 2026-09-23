@@ -70,8 +70,11 @@ if RUBY_VERSION >= '3.0'
     end
   end
 
-  [
-    API::V2::Management::Exceptions::Base,
-    Grape::Exceptions::Validation,
-  ].each { |klass| klass.singleton_class.prepend(ExceptionKwargsFix) }
+  Grape::Exceptions::Validation.singleton_class.prepend(ExceptionKwargsFix)
+
+  # Rails 7.0: API::* is autoloaded (reloadable) and may not be referenced
+  # from an initializer directly; patch it after each (re)load instead.
+  Rails.application.config.to_prepare do
+    API::V2::Management::Exceptions::Base.singleton_class.prepend(ExceptionKwargsFix)
+  end
 end

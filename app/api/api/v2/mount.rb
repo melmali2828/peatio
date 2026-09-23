@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-require_dependency 'v2/validations'
+require_dependency 'api/v2/validations'
 
 module API
   module V2

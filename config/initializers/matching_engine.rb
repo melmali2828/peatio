@@ -1,12 +1,16 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-case ENV.fetch('MATCHING_ENGINE', 'peatio')
-when 'finex'
-  Rails.logger.info { 'Use finex as third-party matching engine' }
-  Order::TYPES << 'post_only'
-when 'peatio'
-  Rails.logger.info { 'Use default matching engine' }
+# Rails 7.0: references autoloaded (reloadable) constants, which initializers
+# may no longer do directly; run after each (re)load instead.
+Rails.application.config.to_prepare do
+  case ENV.fetch('MATCHING_ENGINE', 'peatio')
+  when 'finex'
+    Rails.logger.info { 'Use finex as third-party matching engine' }
+    Order::TYPES << 'post_only'
+  when 'peatio'
+    Rails.logger.info { 'Use default matching engine' }
+  end
+  Order::TYPES.freeze
+  Order.enumerize :ord_type, in: Order::TYPES, scope: true
 end
-Order::TYPES.freeze
-Order.enumerize :ord_type, in: Order::TYPES, scope: true

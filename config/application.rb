@@ -10,6 +10,7 @@ require 'rails'
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
+require_relative 'env_tweaks'
 
 module Peatio
   class Application < Rails::Application
