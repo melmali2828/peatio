@@ -216,12 +216,20 @@ module API
         post '/wallets/currencies' do
           wallet = Wallet.find(params[:id])
 
-          wallet.transaction do
+          # All or nothing. Collect the error and roll back explicitly instead of
+          # calling error! (a throw) inside the transaction: Rails commits or rolls
+          # back a thrown-out-of transaction depending on its version.
+          errors = nil
+          wallet.transaction(requires_new: true) do
             params[:currencies].each do |c_id|
               c_w = CurrencyWallet.new(currency_id: c_id, wallet_id: params[:id])
-              error!({ errors: c_w.errors.full_messages }, 422) unless c_w.save
+              next if c_w.save
+
+              errors = c_w.errors.full_messages
+              raise ActiveRecord::Rollback
             end
           end
+          error!({ errors: errors }, 422) if errors
 
           present wallet, with: API::V2::Admin::Entities::Wallet
           status 201

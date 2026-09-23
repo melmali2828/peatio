@@ -337,6 +337,14 @@ describe API::V2::Admin::Wallets, type: :request do
       expect(response).to have_http_status 422
       expect(response).to include_api_error('Currency has already been taken')
     end
+
+    it 'adds nothing when one of the currencies cannot be added' do
+      api_post '/api/v2/admin/wallets/currencies', params: { id: wallet.id, currencies: %w[trst eth] }, token: token
+
+      expect(response).to have_http_status 422
+      expect(response).to include_api_error('Currency has already been taken')
+      expect(wallet.reload.currency_ids).not_to include('trst')
+    end
   end
 
   describe 'POST /api/v2/admin/wallets/currencies' do
