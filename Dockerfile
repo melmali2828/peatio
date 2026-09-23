@@ -1,6 +1,6 @@
-FROM ruby:2.6.6 as base
+FROM ruby:3.4.5 AS base
 
-MAINTAINER lbellet@heliostech.fr
+LABEL maintainer="lbellet@heliostech.fr"
 
 # By default image is built using RAILS_ENV=production.
 # You may want to customize it:
@@ -10,7 +10,7 @@ MAINTAINER lbellet@heliostech.fr
 # See https://docs.docker.com/engine/reference/commandline/build/#set-build-time-variables-build-arg
 #
 ARG RAILS_ENV=production
-ENV RAILS_ENV=${RAILS_ENV} APP_HOME=/home/app KAIGARA_VERSION=0.1.27
+ENV RAILS_ENV=${RAILS_ENV} APP_HOME=/home/app
 
 # Allow customization of user ID and group ID (it's useful when you use Docker bind mounts)
 ARG UID=1000
@@ -28,18 +28,18 @@ RUN groupadd -r --gid ${GID} app \
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install default-libmysqlclient-dev -y
 
-# Install Kaigara
-RUN curl -Lo /usr/bin/kaigara https://github.com/openware/kaigara/releases/download/${KAIGARA_VERSION}/kaigara \
-  && chmod +x /usr/bin/kaigara
-
 WORKDIR $APP_HOME
+
+# Bundler settings (replace the removed --path/--without flags).
+# BUNDLE_FROZEN fails the build if Gemfile and Gemfile.lock disagree.
+ENV BUNDLE_PATH=/opt/vendor/bundle BUNDLE_WITHOUT=development:test BUNDLE_FROZEN=true
 
 # Install dependencies defined in Gemfile.
 COPY --chown=app:app Gemfile Gemfile.lock $APP_HOME/
 RUN mkdir -p /opt/vendor/bundle \
-  && gem install bundler:2.1.4 \
+  && gem install bundler -v 2.4.22 --no-document \
   && chown -R app:app /opt/vendor $APP_HOME \
-  && su app -s /bin/bash -c "bundle install --jobs $(nproc) --path /opt/vendor/bundle"
+  && su app -s /bin/bash -c "bundle install --jobs $(nproc)"
 
 # Copy application sources.
 COPY --chown=app:app . $APP_HOME
@@ -66,4 +66,4 @@ FROM base
 COPY --chown=app:app Gemfile.plugin Gemfile.lock $APP_HOME/
 
 # Install plugins.
-RUN bundle install --path /opt/vendor/bundle --jobs $(nproc)
+RUN bundle install --jobs $(nproc)

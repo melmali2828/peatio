@@ -7,7 +7,6 @@
 Rails.autoloaders.main.inflector.inflect(
   'aasm'                          => 'AASM',
   'csv_formatter'                 => 'CSVFormatter',
-  'json_log_formatter'            => 'JSONLogFormatter',
   'jwt_authentication_middleware' => 'JWTAuthenticationMiddleware',
   'kline_db'                      => 'KlineDB',
   'rabbit_mq_http'                => 'RabbitMQHTTP',
@@ -32,3 +31,7 @@ Rails.autoloaders.main.ignore(Rails.root.join('app/trading/matching/constants.rb
 # Matching::AMQP (pre-existing dead code); left in, it would break
 # eager loading in production.
 %w[trade_execution/amqp order_processing/amqp].each { |f| Rails.autoloaders.main.ignore(Rails.root.join("lib/peatio/bench/#{f}.rb")) }
+
+# Required from config/application.rb (production.rb needs it before
+# autoloading is set up).
+Rails.autoloaders.main.ignore(Rails.root.join('lib/peatio/json_log_formatter.rb'))

@@ -11,6 +11,8 @@ require 'rails'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 require_relative 'env_tweaks'
+# production.rb uses JSONLogFormatter before autoloading is set up; ignored by Zeitwerk.
+require_relative '../lib/peatio/json_log_formatter'
 
 module Peatio
   class Application < Rails::Application

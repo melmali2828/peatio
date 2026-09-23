@@ -1,4 +1,10 @@
-require 'bump'
+# bump is in the development group; skip the release tasks when it is not installed
+# (e.g. the production image, built with BUNDLE_WITHOUT=development:test).
+begin
+  require 'bump'
+rescue LoadError
+  return
+end
 
 def bot_username
   ENV.fetch('BOT_USERNAME', 'kite-bot')

@@ -539,6 +539,7 @@ DEPENDENCIES
   observer
   peatio (~> 3.1.0)
   pg (~> 1.2)
+  pry (~> 0.14.2)
   pry-byebug (~> 3.7)
   psych (~> 3.3.2)
   puma (~> 3.12.2)

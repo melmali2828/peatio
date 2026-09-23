@@ -50,6 +50,9 @@ gem 'rack-cors', '~> 1.0.6', require: false
 gem 'jwt-rack', '~> 0.1.0', require: false
 gem 'vault', '~> 0.12', require: false
 gem 'vault-rails', git: 'http://github.com/rubykube/vault-rails'
+# vault-rails (rubykube fork) does `require 'pry'` in lib/vault/encrypted_model.rb,
+# so pry must be installed in production too (it is not otherwise loaded).
+gem 'pry', '~> 0.14.2'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'net-http-persistent', '>= 3.0.1'
 gem 'influxdb', '~> 0.7.0'
