@@ -81,6 +81,12 @@ namespace :job do
                   else
                     Mysql2::Client.new(sql_config(ENV.fetch('RAILS_ENV', 'development')))
                   end
+        # schema.rb does not store procedures, so databases built with
+        # db:schema:load lack compact_orders. Recreate it on every run (idempotent).
+        unless Rails.configuration.database_adapter.downcase == 'PostgreSQL'.downcase
+          main_db.query('DROP PROCEDURE IF EXISTS `compact_orders`')
+          main_db.query(Rails.root.join('db/procedures/compact_orders.mysql.sql').read)
+        end
         # Execute Stored Procedure for Liabilities compacting
         # Example:
         # Current date: "2020-07-30 16:39:15"

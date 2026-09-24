@@ -44,7 +44,6 @@ gem 'validates_lengths_from_database', '~> 0.7.0'
 gem 'jwt-multisig', '~> 1.0.0'
 gem 'cash-addr', '~> 0.2.0', require: 'cash_addr'
 gem 'keccak', '~> 1.3', require: 'digest/keccak'
-gem 'scout_apm', '~> 2.4', require: false
 gem 'peatio', '~> 3.1.0'
 gem 'rack-cors', '~> 1.0.6', require: false
 gem 'jwt-rack', '~> 0.1.0', require: false

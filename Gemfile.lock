@@ -443,8 +443,6 @@ GEM
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     safe_yaml (1.0.5)
-    scout_apm (2.6.10)
-      parser
     securerandom (0.4.1)
     sentry-rails (4.9.2)
       railties (>= 5.0)
@@ -558,7 +556,6 @@ DEPENDENCIES
   rubocop-rspec (~> 1.32)
   ruby-prof (~> 1.7)
   safe_yaml (~> 1.0.5)
-  scout_apm (~> 2.4)
   sentry-rails (~> 4.9)
   sentry-ruby (~> 4.9)
   timecop (~> 0.9)

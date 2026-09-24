@@ -34,9 +34,6 @@ module Peatio
       Sentry.init { |config| config.dsn = ENV['SENTRY_DSN_BACKEND'] }
     end
 
-    # Require Scout.
-    require 'scout_apm' if Rails.env.in?(ENV['SCOUT_ENV'].to_s.split(',').map(&:squish))
-
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
