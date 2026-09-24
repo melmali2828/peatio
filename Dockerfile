@@ -48,10 +48,13 @@ COPY --chown=app:app . $APP_HOME
 USER app
 
 # Initialize application configuration & assets.
+# init_config also renders config/application.yml (Figaro development defaults);
+# it is deleted so production only reads real environment variables.
 RUN echo "# This file was overridden by default during docker image build." > Gemfile.plugin \
   && ./bin/init_config \
+  && rm -f config/application.yml \
   && chmod +x ./bin/logger \
-  && bundle exec rake tmp:create
+  && mkdir -p tmp/cache/assets tmp/sockets tmp/pids tmp/screenshots
 
 # Expose port 3000 to the Docker host, so we can access it from the outside.
 EXPOSE 3000

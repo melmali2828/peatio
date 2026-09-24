@@ -31,3 +31,10 @@ log
 # Ignore locally installed gems
 /vendor/bundle
 
+
+# Local-only files. config/application.yml holds Figaro development defaults;
+# the image must read configuration only from real environment variables.
+config/application.yml
+full_run_*.txt
+bundle_update_rails7.txt
+.upgrade-backups/
