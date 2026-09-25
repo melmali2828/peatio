@@ -61,18 +61,17 @@ group :development, :test do
   gem 'bump',         '~> 0.7'
   gem 'faker',        '~> 2.23'
   gem 'pry-byebug',   '~> 3.7'
-  gem 'bullet',       '~> 7.1'
+  gem 'bullet',       '~> 8.2'
   gem 'grape_on_rails_routes', '~> 0.3.2'
 end
 
 group :development do
-  gem 'annotate',   '~> 3.2.0'
   gem 'ruby-prof', '~> 1.7', require: false
   gem 'listen',     '>= 3.0.5', '< 3.2'
 end
 
 group :test do
-  gem 'rspec-rails', '~> 7.1'
+  gem 'rspec-rails', '~> 8.0'
   gem 'rspec-retry',         '~> 0.6'
   gem 'webmock', '3.18.1'
   gem 'database_cleaner',    '~> 2.1'
