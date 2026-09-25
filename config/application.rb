@@ -16,7 +16,7 @@ require_relative '../lib/peatio/json_log_formatter'
 
 module Peatio
   class Application < Rails::Application
-    config.load_defaults 7.1
+    config.load_defaults 7.2
     
     # Deliberate reverts of load_defaults (pre-upgrade behaviour kept):
     # - belongs_to presence validation: 45 non-optional associations and no DB
@@ -26,6 +26,9 @@ module Peatio
     #   alias) on every validation and enumerize#reload rewrites enum attributes
     #   (Order#ord_type). Readonly columns stay out of UPDATEs either way.
     config.active_record.raise_on_assign_to_attr_readonly = false
+    # - YJIT (7.2): unmeasured memory cost across puma + ~10 daemons; enable
+    #   later after measuring with RUBY_YJIT_ENABLE=1.
+    config.yjit = false
     
 
     # Eager loading app dir.
