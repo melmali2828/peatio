@@ -6,7 +6,7 @@ source 'https://rubygems.org'
 ruby '~> 3.4.0'
 
 gem 'ransack', '~> 4.2.0'
-gem 'rails', '~> 7.1.6'
+gem 'rails', '~> 7.2.4'
 gem 'puma', '~> 3.12.2'
 gem 'mysql2', '~> 0.5.2'
 gem 'redis', '~> 4.1.2', require: ['redis', 'redis/connection/hiredis']
