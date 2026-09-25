@@ -31,7 +31,7 @@ class InternalTransfer < ApplicationRecord
   # == Class Methods ========================================================
   # == Instance Methods =====================================================
 
-  enum state: { completed: 1 }
+  enum :state, { completed: 1 }
 
   def direction(user)
     user == sender ? 'out' : 'in'

@@ -12,9 +12,9 @@ class Adjustment < ApplicationRecord
 
   # == Attributes ===========================================================
 
-  enum category: CATEGORIES
+  enum :category, CATEGORIES
 
-  enum state: { pending: 1, accepted: 2, rejected: 3 }
+  enum :state, { pending: 1, accepted: 2, rejected: 3 }
 
   # == Relationships ========================================================
 
