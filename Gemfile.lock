@@ -166,7 +166,7 @@ GEM
       http_parser.rb (~> 0)
     email_validator (1.6.0)
       activemodel
-    enumerize (2.8.1)
+    enumerize (3.0.0)
       activesupport (>= 3.2)
     erubi (1.13.1)
     eventmachine (1.2.7)
@@ -513,7 +513,7 @@ DEPENDENCIES
   drb
   em-synchrony (~> 1.0)
   email_validator (~> 1.6.0)
-  enumerize (~> 2.8)
+  enumerize (~> 3.0)
   eventmachine (~> 1.2)
   factory_bot_rails (~> 5.0, >= 5.0.2)
   faker (~> 2.23)
