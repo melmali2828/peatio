@@ -16,6 +16,15 @@ require_relative '../lib/peatio/json_log_formatter'
 
 module Peatio
   class Application < Rails::Application
+    config.load_defaults 7.0
+    
+    # Deliberate reverts of load_defaults (pre-upgrade behaviour kept):
+    # - belongs_to presence validation: 45 non-optional associations and no DB
+    #   foreign keys; enabling it is a separate data-integrity decision.
+    config.active_record.belongs_to_required_by_default = false
+    # - to_time keeps the system offset; Rails 8.0 deprecates false, revisit then.
+    config.active_support.to_time_preserves_timezone = false
+    
 
     # Eager loading app dir.
     config.eager_load_paths += Dir[Rails.root.join('app')]
