@@ -13,7 +13,7 @@ namespace :job do
           Order.cancel(o.id)
         end
 
-        { pointer: Time.now.to_s(:db), counter: orders.count }
+        { pointer: Time.now.to_fs(:db), counter: orders.count }
       end
     end
 
@@ -93,8 +93,8 @@ namespace :job do
         # min_time: "2020-07-23 00:00:00"
         # max_time: "2020-07-24 00:00:00"
         # Compact liabilities beetwen: "2020-07-23 00:00:00" and "2020-07-24 00:00:00"
-        args.with_defaults(min_time: (Time.now - 1.week).beginning_of_day.to_s(:db),
-                           max_time: (Time.now - 6.day).beginning_of_day.to_s(:db))
+        args.with_defaults(min_time: (Time.now - 1.week).beginning_of_day.to_fs(:db),
+                           max_time: (Time.now - 6.day).beginning_of_day.to_fs(:db))
         result = if Rails.configuration.database_adapter.downcase == 'PostgreSQL'.downcase
                    main_db.query("select * from compact_orders('#{args.min_time}'::date, '#{args.max_time}'::date);")
                  else

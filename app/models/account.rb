@@ -3,7 +3,7 @@
 class Account < ApplicationRecord
   AccountError = Class.new(StandardError)
 
-  self.primary_keys = :currency_id, :member_id
+  self.primary_key = %i[currency_id member_id]
 
   belongs_to :currency, required: true
   belongs_to :member, required: true

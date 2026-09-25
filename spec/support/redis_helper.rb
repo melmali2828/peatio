@@ -3,7 +3,7 @@
 
 module RedisTestHelper
   def clear_redis
-    Rails.cache.redis.flushall
+    Rails.cache.redis.then { |r| r.flushall }
   end
 end
 

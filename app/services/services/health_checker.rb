@@ -33,7 +33,7 @@ module Services
       end
 
       def check_redis
-        Rails.cache.redis.ping == 'PONG'
+        Rails.cache.redis.then { |r| r.ping } == 'PONG'
       end
 
       def check_rabbitmq

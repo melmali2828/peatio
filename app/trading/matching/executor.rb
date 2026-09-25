@@ -110,7 +110,7 @@ module Matching
           statement = Arel::UpdateManager.new
           statement.table(table)
 
-          if record.composite?
+          if record.class.primary_key.is_a?(Array)
             record.class.primary_key.each do |key|
               statement.where(table[key].eq(record[key]))
             end

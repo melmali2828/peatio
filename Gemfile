@@ -6,7 +6,7 @@ source 'https://rubygems.org'
 ruby '~> 3.4.0'
 
 gem 'ransack', '~> 4.2.0'
-gem 'rails', '~> 7.0.0'
+gem 'rails', '~> 7.1.6'
 gem 'concurrent-ruby', '1.3.4'
 gem 'puma', '~> 3.12.2'
 gem 'mysql2', '~> 0.5.2'
@@ -56,7 +56,6 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'net-http-persistent', '>= 3.0.1'
 gem 'influxdb', '~> 0.7.0'
 gem 'safe_yaml', '~> 1.0.5', require: 'safe_yaml/load'
-gem 'composite_primary_keys', '~> 14.0.1'
 
 group :development, :test do
   gem 'irb'
@@ -77,7 +76,7 @@ group :test do
   gem 'rspec-rails', '~> 7.1'
   gem 'rspec-retry',         '~> 0.6'
   gem 'webmock', '3.18.1'
-  gem 'database_cleaner',    '~> 1.7'
+  gem 'database_cleaner',    '~> 2.1'
   gem 'mocha', '1.16.1', require: false
   gem 'factory_bot_rails', '~> 5.0', '>= 5.0.2'
   gem 'timecop',             '~> 0.9'
