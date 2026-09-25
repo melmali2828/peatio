@@ -16,14 +16,16 @@ require_relative '../lib/peatio/json_log_formatter'
 
 module Peatio
   class Application < Rails::Application
-    config.load_defaults 7.0
+    config.load_defaults 7.1
     
     # Deliberate reverts of load_defaults (pre-upgrade behaviour kept):
     # - belongs_to presence validation: 45 non-optional associations and no DB
     #   foreign keys; enabling it is a separate data-integrity decision.
     config.active_record.belongs_to_required_by_default = false
-    # - to_time keeps the system offset; Rails 8.0 deprecates false, revisit then.
-    config.active_support.to_time_preserves_timezone = false
+    # - readonly-attribute assignment raising (7.1): currency.rb rewrites id (code
+    #   alias) on every validation and enumerize#reload rewrites enum attributes
+    #   (Order#ord_type). Readonly columns stay out of UPDATEs either way.
+    config.active_record.raise_on_assign_to_attr_readonly = false
     
 
     # Eager loading app dir.

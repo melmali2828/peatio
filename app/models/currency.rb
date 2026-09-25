@@ -20,7 +20,7 @@ class Currency < ApplicationRecord
 
   # == Extensions ===========================================================
 
-  serialize :options, JSON unless Rails.configuration.database_support_json
+  serialize :options, coder: JSON unless Rails.configuration.database_support_json
 
   include Helpers::ReorderPosition
 

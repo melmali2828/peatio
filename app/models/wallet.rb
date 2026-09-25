@@ -4,8 +4,8 @@
 class Wallet < ApplicationRecord
   extend Enumerize
 
-  serialize :balance, JSON unless Rails.configuration.database_support_json
-  serialize :plain_settings, JSON unless Rails.configuration.database_support_json
+  serialize :balance, coder: JSON unless Rails.configuration.database_support_json
+  serialize :plain_settings, coder: JSON unless Rails.configuration.database_support_json
 
   include Vault::EncryptedModel
 

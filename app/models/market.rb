@@ -48,7 +48,7 @@ class Market < ApplicationRecord
 
   # == Extensions ===========================================================
 
-  serialize :data, JSON unless Rails.configuration.database_support_json
+  serialize :data, coder: JSON unless Rails.configuration.database_support_json
 
   include Helpers::ReorderPosition
 

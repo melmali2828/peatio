@@ -4,9 +4,9 @@
 class Deposit < ApplicationRecord
   STATES = %i[submitted canceled rejected accepted collected skipped processing fee_processing].freeze
 
-  serialize :error, JSON unless Rails.configuration.database_support_json
-  serialize :spread, Array
-  serialize :from_addresses, Array
+  serialize :error, coder: JSON unless Rails.configuration.database_support_json
+  serialize :spread, type: Array, coder: YAML
+  serialize :from_addresses, type: Array, coder: YAML
 
   include AASM
   include AASM::Locking

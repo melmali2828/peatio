@@ -22,8 +22,8 @@ class Withdraw < ApplicationRecord
 
   extend Enumerize
 
-  serialize :error, JSON unless Rails.configuration.database_support_json
-  serialize :metadata, JSON unless Rails.configuration.database_support_json
+  serialize :error, coder: JSON unless Rails.configuration.database_support_json
+  serialize :metadata, coder: JSON unless Rails.configuration.database_support_json
 
   TRANSFER_TYPES = { fiat: 100, crypto: 200 }
 
