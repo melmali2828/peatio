@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 
 ruby '~> 3.4.0'
 
-gem 'ransack', '~> 2.5.0'
+gem 'ransack', '~> 4.2.0'
 gem 'rails', '~> 7.0.0'
 gem 'concurrent-ruby', '1.3.4'
 gem 'puma', '~> 3.12.2'
