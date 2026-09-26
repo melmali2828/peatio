@@ -20,7 +20,7 @@ require_relative '../lib/peatio/json_log_formatter'
 
 module Peatio
   class Application < Rails::Application
-    config.load_defaults 8.0
+    config.load_defaults 8.1
     
     # Deliberate reverts of load_defaults (pre-upgrade behaviour kept):
     # - belongs_to presence validation: 45 non-optional associations and no DB
