@@ -92,4 +92,6 @@ gem 'psych', '~> 3.3.2'
 gem 'mutex_m'
 gem 'observer'
 gem 'csv'
+# Pinned below 3.0: multi_json 1.15 passes quirks_mode (ArgumentError in json 3). Lift with the multi_json upgrade.
+gem 'json', '~> 2.21'
 gem 'drb'
