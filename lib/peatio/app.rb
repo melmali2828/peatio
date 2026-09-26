@@ -2,7 +2,10 @@
 
 module Peatio
   class App
-    include ActiveSupport::Configurable
+    # Was ActiveSupport::Configurable (deprecated in Rails 8.1, removed in 8.2); only the class-level config store is used.
+    def self.config
+      @config ||= ActiveSupport::OrderedOptions.new
+    end
 
     class Error < ::StandardError; end
 
