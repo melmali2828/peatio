@@ -180,6 +180,12 @@ describe Beneficiary, 'Instance Methods' do
               account_number: '03****1557'
             })
           end
+
+          it 'should mask account number after reload (string keys from Vault)' do
+            masked = fiat_beneficiary.reload.masked_data
+            expect(masked.keys.map { |k| k.to_s }.count('account_number')).to eq 1
+            expect(masked.to_json).not_to include '0399261557'
+          end
         end
 
         context 'coin beneficiary' do

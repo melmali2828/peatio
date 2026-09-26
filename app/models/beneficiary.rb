@@ -174,7 +174,9 @@ class Beneficiary < ApplicationRecord
   end
 
   def masked_data
-    data.merge(account_number: masked_account_number).compact if data.present?
+    # data comes back from Vault with string keys; symbolize so the masked value
+    # replaces account_number instead of being added next to the raw one.
+    data.symbolize_keys.merge(account_number: masked_account_number).compact if data.present?
   end
 
   private
