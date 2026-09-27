@@ -6,7 +6,6 @@ module API
       class Engines < Grape::API
         namespace :engines do
           desc 'Get all engine, result is paginated.' do
-            @settings[:scope] = :read_engines
             success API::V2::Management::Entities::Engine
           end
           params do
@@ -32,7 +31,7 @@ module API
                      default: 'id',
                      desc: 'Name of the field, which result will be ordered by.'
           end
-          post '/get' do
+          post '/get', scope: :read_engines do
             ransack_params = API::V2::Admin::Helpers::RansackBuilder.new(params)
                                .eq(:name)
                                .build
@@ -44,7 +43,6 @@ module API
           end
 
           desc 'Creates new engine' do
-            @settings[:scope] = :write_engines
             success API::V2::Management::Entities::Engine
           end
           params do
@@ -67,7 +65,7 @@ module API
             optional :data,
                      desc: -> { 'Metadata for engine' }
           end
-          post '/new' do
+          post '/new', scope: :write_engines do
             engine = ::Engine.new(declared(params, include_missing: false))
             if engine.save
               present engine, with: API::V2::Management::Entities::Engine
@@ -79,7 +77,6 @@ module API
           end
 
           desc 'Update engine' do
-            @settings[:scope] = :write_engines
             success API::V2::Management::Entities::Engine
           end
           params do
@@ -102,7 +99,7 @@ module API
                      default: 1,
                      desc: -> { API::V2::Management::Entities::Engine.documentation[:state][:desc] }
           end
-          post '/update' do
+          post '/update', scope: :write_engines do
             engine = ::Engine.find(params[:id])
             if engine.update(declared(params, include_missing: false))
               present engine, with: API::V2::Management::Entities::Engine

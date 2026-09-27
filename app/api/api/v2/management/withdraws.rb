@@ -26,7 +26,6 @@ module API
         end
 
         desc 'Returns withdraws as paginated collection.' do
-          @settings[:scope] = :read_withdraws
           success API::V2::Management::Entities::Withdraw
         end
         params do
@@ -36,7 +35,7 @@ module API
           optional :limit,    type: Integer, default: 100, range: 1..1000, desc: 'The number of objects per page (defaults to 100, maximum is 1000).'
           optional :state,    type: String,  values: -> { Withdraw::STATES.map(&:to_s) }, desc: 'The state to filter by.'
         end
-        post '/withdraws' do
+        post '/withdraws', scope: :read_withdraws do
           currency = Currency.find(params[:currency]) if params[:currency].present?
           member   = Member.find_by!(uid: params[:uid]) if params[:uid].present?
 
@@ -53,18 +52,16 @@ module API
         end
 
         desc 'Returns withdraw by ID.' do
-          @settings[:scope] = :read_withdraws
           success API::V2::Management::Entities::Withdraw
         end
         params do
           requires :tid, type: String, desc: 'The shared transaction ID.'
         end
-        post '/withdraws/get' do
+        post '/withdraws/get', scope: :read_withdraws do
           present Withdraw.find_by!(params.slice(:tid)), with: API::V2::Management::Entities::Withdraw
         end
 
         desc 'Creates new withdraw.' do
-          @settings[:scope] = :write_withdraws
           detail 'Creates new withdraw. The behaviours for fiat and crypto withdraws are different. ' \
                 'Fiat: money are immediately locked, withdraw state is set to «submitted», system workers ' \
                       'will validate withdraw later against suspected activity, and assign state to «rejected» or «accepted». ' \
@@ -95,7 +92,7 @@ module API
 
           exactly_one_of :rid, :beneficiary_id
         end
-        post '/withdraws/new' do
+        post '/withdraws/new', scope: :write_withdraws do
           member = Member.find_by(uid: params[:uid])
 
           currency = Currency.find(params[:currency])
@@ -138,7 +135,6 @@ module API
         end
 
         desc 'Performs action on withdraw.' do
-          @settings[:scope] = :write_withdraws
           detail '«process» – system will lock the money, check for suspected activity, validate recipient address, and initiate the processing of the withdraw. ' \
                 '«cancel»  – system will mark withdraw as «canceled», and unlock the money.'
           success API::V2::Management::Entities::Withdraw
@@ -147,7 +143,7 @@ module API
           requires :tid,    type: String, desc: 'The shared transaction ID.'
           requires :action, type: String, values: %w[process cancel], desc: 'The action to perform.'
         end
-        put '/withdraws/action' do
+        put '/withdraws/action', scope: :write_withdraws do
           record = Withdraw.find_by!(params.slice(:tid))
           perform_action(record, params[:action])
           present record, with: API::V2::Management::Entities::Withdraw

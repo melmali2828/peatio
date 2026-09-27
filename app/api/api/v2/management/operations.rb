@@ -17,7 +17,6 @@ module API
           op_type_plural = op_type.to_s.pluralize
 
           desc "Returns #{op_type_plural} as paginated collection." do
-            @settings[:scope] = :read_operations
             success API::V2::Management::Entities::Operation
           end
           params do
@@ -46,7 +45,7 @@ module API
                     type: String,
                     desc: "The reference type for operations filtering"
           end
-          post op_type_plural do
+          post op_type_plural, scope: :read_operations do
             currency_id = params.fetch(:currency, nil)
 
             "operations/#{op_type}"
@@ -64,7 +63,6 @@ module API
           end
 
           desc "Creates new #{op_type} operation." do
-            @settings[:scope] = :write_operations
             success API::V2::Management::Entities::Operation
           end
           params do
@@ -86,7 +84,7 @@ module API
                      desc: 'Operation credit amount.'
             exactly_one_of :debit, :credit
           end
-          post "/#{op_type_plural}/new" do
+          post "/#{op_type_plural}/new", scope: :write_operations do
             attributes = declared(params)
 
             create_operation!(attributes).tap do |op|
@@ -106,7 +104,6 @@ module API
           op_type_plural = op_type.to_s.pluralize
 
           desc "Returns #{op_type_plural} as paginated collection." do
-            @settings[:scope] = :read_operations
             success API::V2::Management::Entities::Operation
           end
           params do
@@ -139,7 +136,7 @@ module API
                      range: 1..10000,
                      desc: 'The number of objects per page (defaults to 100, maximum is 10000).'
           end
-          post op_type_plural do
+          post op_type_plural, scope: :read_operations do
             currency_id = params.fetch(:currency, nil)
             member = Member.find_by!(uid: params[:uid]) if params[:uid].present?
 
@@ -157,7 +154,6 @@ module API
           end
 
           desc "Creates new #{op_type} operation." do
-            @settings[:scope] = :write_operations
             success API::V2::Management::Entities::Operation
           end
           params do
@@ -184,7 +180,7 @@ module API
                      desc: 'Operation credit amount.'
             exactly_one_of :debit, :credit
           end
-          post "/#{op_type_plural}/new" do
+          post "/#{op_type_plural}/new", scope: :write_operations do
             attributes = declared(params)
 
             create_operation!(attributes).tap do |op|

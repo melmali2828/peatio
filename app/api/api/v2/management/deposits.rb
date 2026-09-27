@@ -7,7 +7,6 @@ module API
       class Deposits < Grape::API
 
         desc 'Returns deposits as paginated collection.' do
-          @settings[:scope] = :read_deposits
           success API::V2::Management::Entities::Deposit
         end
         params do
@@ -18,7 +17,7 @@ module API
           optional :limit,    type: Integer, default: 100, range: 1..1000, desc: 'The number of deposits per page (defaults to 100, maximum is 1000).'
           optional :state,    type: String, values: -> { ::Deposit.aasm.states.map(&:name).map(&:to_s) }, desc: 'The state to filter by.'
         end
-        post '/deposits' do
+        post '/deposits', scope: :read_deposits do
           currency = Currency.find(params[:currency]) if params[:currency].present?
           member   = Member.find_by!(uid: params[:uid]) if params[:uid].present?
           Deposit
@@ -35,20 +34,18 @@ module API
         end
 
         desc 'Returns deposit by TID.' do
-          @settings[:scope] = :read_deposits
           success API::V2::Management::Entities::Deposit
         end
         params do
           requires :tid, type: String, desc: 'The transaction ID.'
         end
-        post '/deposits/get' do
+        post '/deposits/get', scope: :read_deposits do
           present Deposit.find_by!(params.slice(:tid)), with: API::V2::Management::Entities::Deposit
         end
 
         desc 'Creates new fiat deposit with state set to «submitted». ' \
             'Optionally pass field «state» set to «accepted» if want to load money instantly. ' \
             'You can also use PUT /fiat_deposits/:id later to load money or cancel deposit.' do
-          @settings[:scope] = :write_deposits
           success API::V2::Management::Entities::Deposit
         end
         params do
@@ -61,7 +58,7 @@ module API
                                     values:  { value: -> { Deposit::TRANSFER_TYPES.keys }, message: 'account.deposit.transfer_type_not_in_list' },
                                     desc: -> { API::V2::Admin::Entities::Deposit.documentation[:transfer_type][:desc] }
         end
-        post '/deposits/new' do
+        post '/deposits/new', scope: :write_deposits do
           member   = Member.find_by(uid: params[:uid])
           currency = Currency.find(params[:currency])
 
@@ -81,14 +78,13 @@ module API
         end
 
         desc 'Allows to load money or cancel deposit.' do
-          @settings[:scope] = :write_deposits
           success API::V2::Management::Entities::Deposit
         end
         params do
           requires :tid,   type: String, desc: 'The shared transaction ID.'
           requires :state, type: String, desc: 'The new state to apply.', values: %w[canceled accepted]
         end
-        put '/deposits/state' do
+        put '/deposits/state', scope: :write_deposits do
           deposit = ::Deposits::Fiat.find_by!(params.slice(:tid))
           if deposit.submitted?
             deposit.with_lock do

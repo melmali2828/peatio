@@ -43,7 +43,6 @@ module API
 
         # POST: api/v2/management/markets/new
         desc 'Create market.' do
-          @settings[:scope] = :write_markets
           success API::V2::Management::Entities::Market
         end
         params do
@@ -73,7 +72,7 @@ module API
                    desc: -> { API::V2::Management::Entities::Engine.documentation[:name][:desc] }
           exactly_one_of :engine_id, :engine_name, message: 'management.market.one_of_engine_id_engine_name_fields'
         end
-        post '/markets/new' do
+        post '/markets/new', scope: :write_markets do
           market = ::Market.new(declared(params, include_missing: false))
           if market.save
             present market, with: API::V2::Management::Entities::Market
@@ -86,7 +85,6 @@ module API
 
         # PUT: api/v2/management/markets/update
         desc 'Update market.' do
-          @settings[:scope] = :write_markets
           success API::V2::Management::Entities::Market
         end
         params do
@@ -125,7 +123,7 @@ module API
                    values: { value: -> (p){ p >= ::Market::TOP_POSITION } },
                    desc: -> { API::V2::Management::Entities::Market.documentation[:position][:desc] }
         end
-        put '/markets/update' do
+        put '/markets/update', scope: :write_markets do
           market = ::Market.find_by!(params.slice(:id))
           if market.update(declared(params, include_missing: false))
             present market, with: API::V2::Management::Entities::Market
@@ -137,17 +135,15 @@ module API
 
         # POST: api/v2/management/markets/list
         desc 'Return markets list.' do
-          @settings[:scope] = :read_markets
           success API::V2::Management::Entities::Market
         end
-        post '/markets/list' do
+        post '/markets/list', scope: :read_markets do
           present ::Market.ordered, with: API::V2::Management::Entities::Market
           status 200
         end
 
         # POST: api/v2/management/markets/:id
         desc 'Returns market by ID.' do
-          @settings[:scope] = :read_markets
           success API::V2::Management::Entities::Market
         end
         params do
@@ -155,7 +151,7 @@ module API
                    type: String,
                    desc: -> { API::V2::Management::Entities::Market.documentation[:id][:desc] }
         end
-        post '/markets/:id' do
+        post '/markets/:id', scope: :read_markets do
           present ::Market.find(params[:id]), with: API::V2::Management::Entities::Market
         end
       end

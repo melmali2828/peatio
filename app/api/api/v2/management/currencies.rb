@@ -93,7 +93,6 @@ module API
 
         # POST: api/v2/management/currencies/list
         desc 'Return currencies list.' do
-          @settings[:scope] = :read_currencies
           success API::V2::Management::Entities::Currency
         end
         params do
@@ -102,7 +101,7 @@ module API
                    values: { value: %w[fiat coin], message: 'management.currency.invalid_type' },
                    desc: -> { API::V2::Entities::Currency.documentation[:type][:desc] }
         end
-        post '/currencies/list' do
+        post '/currencies/list', scope: :read_currencies do
           currencies = Currency.all
           currencies = currencies.where(type: params[:type]).includes(:blockchain) if params[:type] == 'coin'
           currencies = currencies.where(type: params[:type]) if params[:type] == 'fiat'
@@ -113,7 +112,6 @@ module API
 
         # POST: api/v2/management/currencies/new
         desc 'Create currency.' do
-          @settings[:scope] = :read_currencies
           success API::V2::Management::Entities::Currency
         end
         params do
@@ -144,7 +142,7 @@ module API
           end
           mutually_exclusive :base_factor, :subunits, message: 'management.currency.one_of_base_factor_subunits_fields'
         end
-        post '/currencies/create' do
+        post '/currencies/create', scope: :read_currencies do
           currency = Currency.new(declared(params, include_missing: false))
           if currency.save
             present currency, with: API::V2::Management::Entities::Currency
@@ -157,19 +155,17 @@ module API
 
         # POST: api/v2/management/currencies
         desc 'Returns currency by code.' do
-          @settings[:scope] = :read_currencies
           success API::V2::Management::Entities::Currency
         end
 
         params do
           requires :code, type: String, desc: 'The currency code.'
         end
-        post '/currencies/:code', requirements: { code: /[\w\.\-]+/ } do
+        post '/currencies/:code', requirements: { code: /[\w\.\-]+/ }, scope: :read_currencies do
           present Currency.find_by!(params.slice(:code)), with: API::V2::Management::Entities::Currency
         end
 
         desc 'Update currency.' do
-          @settings[:scope] = :write_currencies
           success API::V2::Management::Entities::Currency
         end
         params do
@@ -238,7 +234,7 @@ module API
                    desc: -> { API::V2::Management::Entities::Currency.documentation[:precision][:desc] }
           optional :icon_url, desc: -> { API::V2::Management::Entities::Currency.documentation[:icon_url][:desc] }
         end
-        put '/currencies/update' do
+        put '/currencies/update', scope: :write_currencies do
           currency = ::Currency.find_by!(params.slice(:id))
           if currency.update(declared(params, include_missing: false))
             present currency, with: API::V2::Management::Entities::Currency

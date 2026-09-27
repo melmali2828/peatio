@@ -7,9 +7,7 @@ module API
       class Transfers < Grape::API
         # TODO: Add endpoints for listing Transfer/Transfers.
 
-        desc 'Creates new transfer.' do
-          @settings[:scope] = :write_transfers
-        end
+        desc 'Creates new transfer.'
         params do
           requires :key,
                    type: String,
@@ -56,7 +54,7 @@ module API
             end
           end
         end
-        post '/transfers/new' do
+        post '/transfers/new', scope: :write_transfers do
           declared_params = declared(params)
 
           attrs = declared_params.slice(:key, :category, :description)

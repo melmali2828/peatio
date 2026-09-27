@@ -5,7 +5,6 @@ module API
     module Management
       class PaymentAddress < Grape::API
         desc 'Create payment address' do
-          @settings[:scope] = :write_payment_addresses
           success API::V2::Management::Entities::PaymentAddress
         end
 
@@ -23,7 +22,7 @@ module API
                     desc: API::V2::Management::Entities::PaymentAddress.documentation[:remote][:desc]
         end
 
-        post '/deposit_address/new' do
+        post '/deposit_address/new', scope: :write_payment_addresses do
           member = Member.find_by(uid: params[:uid]) if params[:uid].present?
 
           currency = Currency.find(params[:currency])

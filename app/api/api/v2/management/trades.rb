@@ -7,7 +7,6 @@ module API
       class Trades < Grape::API
 
         desc 'Returns trades as paginated collection.' do
-          @settings[:scope] = :read_trades
           success API::V2::Management::Entities::Trade
         end
         params do
@@ -18,7 +17,7 @@ module API
           optional :page,     type: Integer, default: 1,   integer_gt_zero: true, desc: 'The page number (defaults to 1).'
           optional :limit,    type: Integer, default: 100, range: 1..1000, desc: 'The number of objects per page (defaults to 100, maximum is 1000).'
         end
-        post '/trades' do
+        post '/trades', scope: :read_trades do
           market = ::Market.find(params[:market]) if params[:market].present?
           member = Member.find_by!(uid: params[:uid]) if params[:uid].present?
 

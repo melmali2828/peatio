@@ -6,14 +6,13 @@ module API
     module Management
       class Accounts < Grape::API
         desc 'Queries the account balance for the given UID and currency.' do
-          @settings[:scope] = :read_accounts
           success API::V2::Management::Entities::Balance
         end
         params do
           requires :uid, type: String, desc: 'The shared user ID.'
           requires :currency, type: String, values: -> { Currency.codes(bothcase: true) }, desc: 'The currency code.'
         end
-        post '/accounts/balance' do
+        post '/accounts/balance', scope: :read_accounts do
           member = Member.find_by!(uid: params[:uid])
           account = member.get_account(params[:currency])
           present account, with: API::V2::Management::Entities::Balance
@@ -21,7 +20,6 @@ module API
         end
 
         desc 'Queries the non-zero balance accounts for the given currency.' do
-          @settings[:scope] = :read_accounts
           success API::V2::Management::Entities::Balance
         end
 
@@ -31,7 +29,7 @@ module API
           optional :limit,    type: Integer, default: 1000, range: 1..100000, desc: 'The number of accounts per page (defaults to 100, maximum is 1000).'
         end
 
-        post '/accounts/balances' do
+        post '/accounts/balances', scope: :read_accounts do
           accounts = ::Account.where("currency_id = ? AND (balance > 0 OR locked > 0)", params[:currency])
           accounts
             .page(params[:page])

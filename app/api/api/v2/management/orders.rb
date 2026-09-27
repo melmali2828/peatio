@@ -7,7 +7,6 @@ module API
         helpers ::API::V2::OrderHelpers
 
         desc 'Returns orders' do
-          @settings[:scope] = :read_orders
           success API::V2::Management::Entities::Order
         end
         params do
@@ -24,7 +23,7 @@ module API
                    values: { value: ::Order::TYPES, message: 'management.orders.invalid_ord_type' },
                    desc: 'Filter order by ord_type.'
         end
-        post '/orders' do
+        post '/orders', scope: :read_orders do
           if params[:uid].present?
             member = Member.find_by(uid: params[:uid])
             params.merge!(member_id: member.id) if member.present?
@@ -42,7 +41,6 @@ module API
         end
 
         desc 'Cancel specific order' do
-          @settings[:scope] = :write_orders
           success API::V2::Management::Entities::Order
         end
         params do
@@ -52,7 +50,7 @@ module API
                    desc: -> { API::V2::Management::Entities::Order.documentation[:id][:desc] }
         end
 
-        post '/orders/:id/cancel' do
+        post '/orders/:id/cancel', scope: :write_orders do
           begin
             order = Order.find(params[:id])
             order.trigger_cancellation
@@ -67,7 +65,6 @@ module API
         end
 
         desc 'Cancel all open orders' do
-          @settings[:scope] = :write_orders
           success API::V2::Management::Entities::Order
         end
         params do
@@ -79,7 +76,7 @@ module API
                    desc: -> { API::V2::Management::Entities::Market.documentation[:id][:desc] }
         end
 
-        post '/orders/cancel' do
+        post '/orders/cancel', scope: :write_orders do
           if params[:uid].present?
             member = Member.find_by(uid: params[:uid])
             params.merge!(member_id: member.id) if member.present?

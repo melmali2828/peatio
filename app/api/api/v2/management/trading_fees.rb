@@ -5,9 +5,7 @@ module API
   module V2
     module Management
       class TradingFees < Grape::API
-        desc 'Returns trading_fees table as paginated collection' do
-          @settings[:scope] = :read_trading_fees
-        end
+        desc 'Returns trading_fees table as paginated collection'
         params do
           optional :group,
                    type: String,
@@ -20,7 +18,7 @@ module API
           optional :page, type: Integer, default: 1, integer_gt_zero: true, desc: 'The page number (defaults to 1).'
           optional :limit, type: Integer, default: 100, range: 1..1000, desc: 'The number of objects per page (defaults to 100, maximum is 1000).'
         end
-        post '/fee_schedule/trading_fees' do
+        post '/fee_schedule/trading_fees', scope: :read_trading_fees do
           TradingFee
             .order(id: :desc)
             .tap { |t| t.where!(market_id: params[:market_id]) if params[:market_id] }

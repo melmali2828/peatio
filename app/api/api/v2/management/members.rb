@@ -3,9 +3,7 @@ module API
     module Management
       class Members < Grape::API
 
-        desc 'Create a member.' do
-          @settings[:scope] = :write_members
-        end
+        desc 'Create a member.'
         params do
           requires :email,
                    type: String,
@@ -26,7 +24,7 @@ module API
                    type: String,
                    desc: 'User group'
         end
-        post '/members' do
+        post '/members', scope: :write_members do
           declared_params = declared(params)
 
           member = Member.create!(declared_params)
@@ -37,9 +35,7 @@ module API
           status 422
         end
 
-        desc 'Set user group.' do
-          @settings[:scope] = :write_members
-        end
+        desc 'Set user group.'
         params do
           requires :uid,
                    type: String,
@@ -48,7 +44,7 @@ module API
                    type: String,
                    desc: 'User gruop'
         end
-        post '/members/group' do
+        post '/members/group', scope: :write_members do
           declared_params = declared(params)
 
           member = Member.find_by!(uid: declared_params[:uid])

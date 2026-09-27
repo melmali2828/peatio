@@ -8,7 +8,6 @@ module API
         namespace :beneficiaries do
 
           desc 'Get list of user beneficiaries' do
-            @settings[:scope] = :read_beneficiaries
             success API::V2::Management::Entities::Beneficiary
           end
           params do
@@ -27,7 +26,7 @@ module API
                             'or pending - requires beneficiary activation with pin.'
 
           end
-          post '/list' do
+          post '/list', scope: :read_beneficiaries do
             member  = Member.find_by!(uid: params[:uid])
 
             member
@@ -41,7 +40,6 @@ module API
           end
 
           desc 'Create new beneficiary' do
-            @settings[:scope] = :write_beneficiaries
             success API::V2::Management::Entities::Beneficiary
           end
           params do
@@ -72,7 +70,7 @@ module API
                     desc: 'Defines either beneficiary active - user can use it to withdraw money'\
                           'or pending - requires beneficiary activation with pin.'
           end
-          post do
+          post scope: :write_beneficiaries do
             declared_params = declared(params)
             member   = Member.find_by!(uid: params[:uid])
             currency = Currency.find_by!(id: declared(params)[:currency_id])

@@ -37,7 +37,6 @@ module API
         end
 
         desc 'Creates new wallet.' do
-          @settings[:scope] = :write_wallets
           success API::V2::Management::Entities::Wallet
         end
         params do
@@ -76,7 +75,7 @@ module API
           end
           exactly_one_of :currencies, :currency, message: 'management.wallet.currencies_field_is_missing'
         end
-        post '/wallets/new' do
+        post '/wallets/new', scope: :write_wallets do
           declared_params = declared(params)
           declared_params[:currency_ids] = params[:currencies].present? ? Array.wrap(params[:currencies]) : Array.wrap(params[:currency])
           wallet = ::Wallet.new(declared_params)
@@ -90,7 +89,6 @@ module API
         end
 
         desc 'Update wallet.' do
-          @settings[:scope] = :write_wallets
           success API::V2::Management::Entities::Wallet
         end
         params do
@@ -125,7 +123,7 @@ module API
                      desc: -> { 'Wallet secret setting' }
           end
         end
-        post '/wallets/update' do
+        post '/wallets/update', scope: :write_wallets do
           wallet = ::Wallet.find(params[:id])
 
           declared_params = declared(params, include_missing: false)
@@ -139,7 +137,6 @@ module API
         end
 
         desc 'Get all wallets, result is paginated.' do
-          @settings[:scope] = :read_wallets
           success API::V2::Management::Entities::Wallet
         end
         params do
@@ -156,7 +153,7 @@ module API
           use :pagination
           use :ordering
         end
-        post '/wallets' do
+        post '/wallets', scope: :read_wallets do
           ransack_params = API::V2::Admin::Helpers::RansackBuilder.new(params)
                              .eq(:blockchain_key)
                              .translate_in(currencies: :currencies_id)
@@ -169,7 +166,6 @@ module API
         end
 
         desc 'Get a wallet.' do
-          @settings[:scope] = :read_wallets
           success API::V2::Management::Entities::Wallet
         end
         params do
@@ -177,7 +173,7 @@ module API
                    type: { value: Integer, message: 'management.wallet.non_integer_id' },
                    desc: -> { API::V2::Management::Entities::Wallet.documentation[:id][:desc] }
         end
-        post '/wallets/:id' do
+        post '/wallets/:id', scope: :read_wallets do
           present ::Wallet.find(params[:id]), with: API::V2::Management::Entities::Wallet
         end
       end
