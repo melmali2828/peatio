@@ -6,7 +6,9 @@ class JSONLogFormatter < ::Logger::Formatter
         obj = msg
       end
       if obj.is_a? Hash
-        JSON.dump(obj.merge({ level: severity, time: time })) + "\n"
+        # String keys: merging symbol keys into a parsed (string-keyed) hash produced
+        # duplicate "level"/"time" keys (json 3 raises on that).
+        JSON.dump(obj.transform_keys(&:to_s).merge('level' => severity, 'time' => time)) + "\n"
       else
         JSON.dump(level: severity, time: time, message: msg) + "\n"
       end
