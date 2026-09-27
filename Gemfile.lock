@@ -1,6 +1,7 @@
 GIT
-  remote: http://github.com/rubykube/vault-rails
-  revision: 167283b25c34ba8a61ce2ad505f68dced3189f43
+  remote: https://github.com/melmali2828/vault-rails
+  revision: cd2d07bfa78b5d8af14b758709c8efa96ae4fcc8
+  branch: peatio
   specs:
     vault-rails (0.6.0)
       rails (>= 4.1)
@@ -546,7 +547,6 @@ DEPENDENCIES
   observer
   peatio (~> 3.1.0)
   pg (~> 1.2)
-  pry (~> 0.14.2)
   pry-byebug (~> 3.7)
   psych (~> 3.3.2)
   puma (~> 3.12.2)
