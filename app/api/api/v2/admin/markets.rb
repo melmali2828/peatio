@@ -42,13 +42,13 @@ module API
 
           params :create_market_params do
             OPTIONAL_MARKET_PARAMS.each do |key, params|
-              optional key, params
+              optional key, **params
             end
           end
 
           params :update_market_params do
             OPTIONAL_MARKET_PARAMS.each do |key, params|
-              optional key, params.except(:default)
+              optional key, **params.except(:default)
             end
           end
         end

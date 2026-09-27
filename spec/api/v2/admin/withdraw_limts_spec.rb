@@ -220,7 +220,8 @@ describe API::V2::Admin::WithdrawLimits, type: :request do
 
     it 'id has invalid type' do
       api_delete '/api/v2/admin/withdraw_limits/id', token: token
-      expect(response).to include_api_error 'admin.withdraw_limit.non_integer_id'
+      # grape >= 2.1 routes Integer path params on digits only: a non-integer id matches no route
+      expect(response.status).to eq 404
     end
 
     it 'deletes withdraw limit table' do

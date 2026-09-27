@@ -513,8 +513,8 @@ describe API::V2::Account::Beneficiaries, 'PATCH /activate', type: :request do
 
       it do
         api_patch endpoint, params: activation_data.merge(id: :id), token: token
-        expect(response.status).to eq 422
-        expect(response).to include_api_error('account.beneficiary.non_integer_id')
+        # grape >= 2.1 routes Integer path params on digits only: a non-integer id matches no route
+        expect(response.status).to eq 404
       end
     end
 
@@ -658,8 +658,8 @@ describe API::V2::Account::Beneficiaries, 'PATCH /resend_pin', type: :request do
 
       it do
         api_patch endpoint, params: resend_data.merge(id: :id), token: token
-        expect(response.status).to eq 422
-        expect(response).to include_api_error('account.beneficiary.non_integer_id')
+        # grape >= 2.1 routes Integer path params on digits only: a non-integer id matches no route
+        expect(response.status).to eq 404
       end
     end
 
@@ -799,8 +799,8 @@ describe API::V2::Account::Beneficiaries, 'DELETE /:id', type: :request do
 
       it do
         api_delete endpoint, token: token
-        expect(response.status).to eq 422
-        expect(response).to include_api_error('account.beneficiary.non_integer_id')
+        # grape >= 2.1 routes Integer path params on digits only: a non-integer id matches no route
+        expect(response.status).to eq 404
       end
     end
 

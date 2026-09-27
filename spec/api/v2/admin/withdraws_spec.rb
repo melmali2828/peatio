@@ -157,7 +157,8 @@ describe API::V2::Admin::Withdraws, type: :request do
       context 'non-integer id' do
         it do
           api_get '/api/v2/admin/withdraws/id', token: token
-          expect(response).to include_api_error('admin.withdraw.non_integer_id')
+          # grape >= 2.1 routes Integer path params on digits only: a non-integer id matches no route
+          expect(response.status).to eq 404
         end
       end
 

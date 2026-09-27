@@ -10,14 +10,12 @@ module API
       class Range < Grape::Validations::Validators::Base
         def initialize(*)
           super
-          @range = @option
+          @range = @options
         end
 
         def validate_param!(attr, params)
           if (params[attr] || @required) && !@range.cover?(params[attr])
-            raise Grape::Exceptions::Validation, \
-              params:  [@scope.full_name(attr)],
-              message: "must be in range: #{@range}."
+            validation_error!(attr, "must be in range: #{@range}.")
           end
         end
       end
@@ -31,12 +29,15 @@ module API
 
         def message(_param)
           api = @scope.instance_variable_get(:@api)
+          # grape-swagger doc APIs are anonymous Grape::API::Instance classes (no base)
+          return super unless api.base&.name
+
           module_name = api.base.module_parent.name.humanize.demodulize
           class_name = api.base.name.humanize.demodulize.singularize
           # Return default API error message for Management module (no errors unify).
           return super if module_name == 'management'
 
-          options_key?(:message) ? @option[:message] : default_exception(module_name, class_name)
+          options_key?(:message) ? @options[:message] : default_exception(module_name, class_name)
         end
 
         def default_exception(module_name, class_name)
@@ -53,12 +54,15 @@ module API
 
         def message(_param)
           api = @scope.instance_variable_get(:@api)
+          # grape-swagger doc APIs are anonymous Grape::API::Instance classes (no base)
+          return super unless api.base&.name
+
           module_name = api.base.module_parent.name.humanize.demodulize
           class_name = api.base.name.humanize.demodulize.singularize
           # Return default API error message for Management module (no errors unify).
           return super if module_name == 'management'
 
-          options_key?(:message) ? @option[:message] : default_exception(module_name, class_name)
+          options_key?(:message) ? @options[:message] : default_exception(module_name, class_name)
         end
 
         def default_exception(module_name, class_name)
@@ -71,9 +75,7 @@ module API
           return unless params.key?(name)
           return if params[name].to_s.to_i > 0
 
-          fail Grape::Exceptions::Validation,
-              params:  [@scope.full_name(name)],
-              message: "#{name} must be greater than zero."
+          validation_error!(name, "#{name} must be greater than zero.")
         end
       end
 
@@ -85,9 +87,7 @@ module API
           currency = Currency.find_by(id: params[:currency])
           return if currency && currency.blockchain_api.supports_cash_addr_format?
 
-          fail Grape::Exceptions::Validation,
-              params:  [@scope.full_name('currency')],
-              message: "#{@option.fetch(:prefix)}.#{REASON}"
+          validation_error!('currency', "#{@options.fetch(:prefix)}.#{REASON}")
         end
       end
     end

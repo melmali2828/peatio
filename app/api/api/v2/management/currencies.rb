@@ -86,7 +86,7 @@ module API
 
           params :create_currency_params do
             OPTIONAL_CURRENCY_PARAMS.each do |key, params|
-              optional key, params
+              optional key, **params
             end
           end
         end
