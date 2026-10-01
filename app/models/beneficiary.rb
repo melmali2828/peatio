@@ -138,7 +138,7 @@ class Beneficiary < ApplicationRecord
   def aml_check!
     result = Peatio::AML.check!(rid, currency_id, member.uid)
     if result.risk_detected
-      b.aml_suspicious!
+      aml_suspicious!
       return nil
     end
     return nil if result.pending

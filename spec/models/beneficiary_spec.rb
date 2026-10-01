@@ -213,3 +213,29 @@ describe Beneficiary, 'Instance Methods' do
     end
   end
 end
+
+describe Beneficiary, '#aml_check!' do
+  # The aml_suspicious event exists only when an AML adapter is configured at load
+  # time (see the aasm block), so the transition is stubbed here.
+  subject { create(:beneficiary, currency: Currency.find('btc')) }
+
+  let(:result) { Struct.new(:risk_detected, :pending) }
+
+  it 'marks itself suspicious and returns nil when risk is detected' do
+    Peatio::AML.expects(:check!).returns(result.new(true, false))
+    subject.expects(:aml_suspicious!).once
+    expect(subject.aml_check!).to be_nil
+  end
+
+  it 'returns nil while the check is pending' do
+    Peatio::AML.expects(:check!).returns(result.new(false, true))
+    subject.expects(:aml_suspicious!).never
+    expect(subject.aml_check!).to be_nil
+  end
+
+  it 'returns true when no risk is detected' do
+    Peatio::AML.expects(:check!).returns(result.new(false, false))
+    subject.expects(:aml_suspicious!).never
+    expect(subject.aml_check!).to eq true
+  end
+end
