@@ -161,13 +161,20 @@ class Member < ApplicationRecord
     def from_payload(p)
       params = filter_payload(p)
       validate_payload(params)
-      member = Member.find_or_create_by(uid: p[:uid]) do |m|
-        m.email = params[:email]
-        m.username = params[:username]
-        m.role = params[:role]
-        m.state = params[:state]
-        m.level = params[:level]
+      member = begin
+        Member.find_or_create_by(uid: p[:uid]) do |m|
+          m.email = params[:email]
+          m.username = params[:username]
+          m.role = params[:role]
+          m.state = params[:state]
+          m.level = params[:level]
+        end
+      rescue ActiveRecord::RecordNotUnique => e
+        Member.find_by(uid: p[:uid]) || raise(e)
       end
+      # Parallel first requests of a new user race between find and create: the loser gets an
+      # unsaved record (email uniqueness) or RecordNotUnique. Use the row the winner created.
+      member = Member.find_by(uid: p[:uid]) || member unless member.persisted?
       member.assign_attributes(params)
       member.save! if member.changed?
       member

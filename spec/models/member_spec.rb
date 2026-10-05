@@ -5,6 +5,35 @@ describe Member do
   let(:member) { build(:member, :level_3) }
   subject { member }
 
+  describe '.from_payload' do
+    let(:payload) { { email: 'race@example.com', uid: 'ID0123456789', role: 'member', state: 'active', level: 2 } }
+
+    it 'creates a new member' do
+      expect { Member.from_payload(payload) }.to change(Member, :count).by(1)
+    end
+
+    context 'when a parallel first request created the member in between' do
+      let!(:existing) { create(:member, email: payload[:email], uid: payload[:uid], level: 1) }
+
+      it 'uses the existing member when the loser got an unsaved record' do
+        Member.stubs(:find_or_create_by).returns(Member.new(payload))
+        member = Member.from_payload(payload)
+        expect(member.id).to eq existing.id
+        expect(member.reload.level).to eq 2
+      end
+
+      it 'uses the existing member when the unique index raised' do
+        Member.stubs(:find_or_create_by).raises(ActiveRecord::RecordNotUnique)
+        expect(Member.from_payload(payload).id).to eq existing.id
+      end
+    end
+
+    it 'still rejects an email taken by another uid' do
+      create(:member, email: payload[:email])
+      expect { Member.from_payload(payload) }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+  end
+
   describe 'uid' do
     subject(:member) { create(:member, :level_3) }
     it do
