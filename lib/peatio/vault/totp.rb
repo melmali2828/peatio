@@ -19,6 +19,14 @@ module Vault
         write_data(totp_code_key(uid), code: code).data[:valid]
       end
 
+      # TOTP keys are created by Barong under its own Vault application name
+      # (totp/keys/<barong app>_<uid>), while Vault.application also names
+      # Peatio's transit keys. VAULT_TOTP_APP_NAME points the code check at
+      # Barong's keys without renaming Peatio's transit keys.
+      def totp_application
+        ENV['VAULT_TOTP_APP_NAME'].presence || Vault.application
+      end
+
       def with_human_error
         raise ArgumentError, 'Block is required' unless block_given?
         yield
@@ -38,7 +46,7 @@ module Vault
       private
 
       def totp_code_key(uid)
-        "totp/code/#{Vault.application}_#{uid}"
+        "totp/code/#{totp_application}_#{uid}"
       end
 
       def read_data(key)
